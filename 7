@@ -1,0 +1,40 @@
+// Online C compiler to run C program online
+#include <stdio.h>
+
+struct Pessoa{
+    char nome[30];
+    int idade;
+    char sexo;
+};
+
+void acharPessoas(struct Pessoa pessoas[], int n){
+    for (int i=0;i<n;i++){
+        if (pessoas[i].sexo == 'M' && pessoas[i].idade>=30){
+            printf("%s",pessoas[i].nome);
+        }
+    }
+}
+
+int main() {
+    struct Pessoa pessoas[50];
+    int n;
+    
+    printf("Informe a quantidade de pessoas: \n");
+    scanf("%d",&n);
+    
+    for (int i=0;i<n;i++){
+        printf("Qual o nome da pessoa %d?\n",i+1);
+        scanf("%s",pessoas[i].nome);
+        
+        printf("Quantos anos a pessoa %d tem?\n",i+1);
+        scanf("%d",&pessoas[i].idade);
+        
+        printf("Qual o sexo da pessoa %d?\n",i+1);
+        scanf(" %c",&pessoas[i].sexo);
+    }
+
+    printf("Estas são as pessoas do sexo masculino com mais de 30 anos:\n");
+    acharPessoas(pessoas,n);
+
+    return 0;
+}
