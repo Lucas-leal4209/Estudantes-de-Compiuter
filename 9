@@ -1,0 +1,45 @@
+// Online C compiler to run C program online
+#include <stdio.h>
+
+struct Veiculo{
+    char modelo[20];
+    int ano;
+    char placa[7];
+    char proprietario[20];
+};
+
+void encontraVeiculo(struct Veiculo carros[], int n){
+    for (int i=0;i<n;i++){
+        if (carros[i].ano<2010){
+            printf("%s, %d\n",carros[i].modelo,carros[i].ano);
+        }
+    }
+}
+
+int main() {
+    struct Veiculo carros[20];
+    int n;
+    
+    printf("Quantos carros gostaria de informar?\n");
+    scanf("%d",&n);
+    
+    for (int i=0;i<n;i++){
+        printf("Informe o modelo do carro %d:\n",i+1);
+        scanf("%s",carros[i].modelo);
+        
+        printf("Informe o ano de fabricação do carro:\n");
+        scanf("%d",&carros[i].ano);
+        
+        printf("Informe a placa do carro:\n");
+        scanf("%s",carros[i].placa);
+        
+        printf("Informe o nome do proprietário:\n");
+        scanf("%s",carros[i].proprietario);
+        
+    }
+    printf("Os carros fabricados antes de 2010 são:\n");
+    encontraVeiculo(carros,n);
+    
+
+    return 0;
+}
