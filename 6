@@ -1,0 +1,33 @@
+// Online C compiler to run C program online
+#include <stdio.h>
+
+typedef struct Pessoa{
+    char nome[20];
+    int idade;
+    char genero;
+    char profissao[15];
+} Pessoa;
+
+
+int main() {
+    Pessoa pessoa;
+    
+    
+    printf("-----Ficha Pessoal-----\n");
+    printf("Qual seu nome nome?\n");
+    scanf("%s",pessoa.nome);
+    
+    printf("Qual sua idade?\n");
+    scanf("%d",&pessoa.idade);
+    
+    printf("Qual seu gênero(F/M)?\n");
+    scanf(" %c",&pessoa.genero);
+    
+    printf("Qual sua profissão?\n");
+    scanf("%s",pessoa.profissao);
+    
+    printf("\n");
+    
+    printf("Nome: %s\nIdade: %d\nGênero: %c\nProfissão: %s.\n", pessoa.nome,pessoa.idade,pessoa.genero,pessoa.profissao);
+    return 0;
+}
