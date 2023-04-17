@@ -20,7 +20,7 @@ int maiorMedia(Aluno aluno[], int n){
     for (int i=0;i<n;i++){
         float media = calculaMedia(aluno[i], n);
         if (media>mediaMaior){
-            media=mediaMaior;
+            mediaMaior=media;
             numMediaMaior = i;
         }
     }
