@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+int main() {
+  FILE *arquivo;
+  char c;
+  int contador=0;
+  arquivo=fopen("arquivo.txt","r");
+
+  if(arquivo==NULL){
+    printf("Erro ao abrir o arquivo.");
+    return 1;
+  }
+   while ((c = fgetc(arquivo)) != EOF) {
+        contador++;
+    }
+  fclose(arquivo);
+  
+  printf("Existem %d caracteres nesse arquivo.\n",contador);
+  return 0;
+}
