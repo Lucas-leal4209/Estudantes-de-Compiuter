@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <string.h>
+int main() {
+  char linha[100];
+  int palindromo=1;
+
+  printf("Alimente a string: ");
+  scanf("%s",linha);
+  
+  for(int i=0,j= strlen(linha)-1;i<j;i++,j--){
+    if(linha[i] != linha[j]){
+      palindromo=0;
+      break;
+    }
+  }
+  if(palindromo==1){
+    printf("%s é um palíndromo.",linha);
+  }else{
+    printf("%s não é um palíndromo.",linha);
+  }
+
+  return 0;
+}
