@@ -1,0 +1,253 @@
+package postgreSQL;
+
+import java.util.Scanner;
+
+public class InterfacePostgreSQL {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Bem vindo ao Sistema CICADA:");
+        System.out.println("Selecione uma opção:");
+        System.out.println("1. Criar tabela");
+        System.out.println("2. Inserir dados");
+        System.out.println("3. Consultar dados");
+        System.out.println("4. Atualizar dados");
+        System.out.println("5. Deletar tabela");
+        System.out.println("6. Apagar dados");
+
+        System.out.println("0. Sair");
+
+        int opcao = scanner.nextInt();
+
+        switch (opcao) {
+            case 1:
+                criarTabela();
+                break;
+            case 2:
+                inserirDados();
+                break;
+            case 3:
+                consultarDados();
+                break;
+            case 4:
+                atualizarDados();
+                break;
+            case 5:
+                deletarTabela();
+                break;
+            case 6:
+                apagarDados();
+                break;
+            case 0:
+                System.out.println("Encerrando a aplicação...");
+                break;
+            default:
+                System.out.println("Opção inválida. Encerrando a aplicação...");
+        }
+    }
+
+    public static void criarTabela() {
+        String SQLcriarTabela = "CREATE TABLE produtosSupermercado (id int, nomeProduto VARCHAR(60), lote VARCHAR(20), validade DATE, codigoBarras int)";
+        String driver = "jdbc:postgresql://127.0.0.1:5432/DadosGerais";
+        Statement st = null;
+
+        try (Connection conn = DriverManager.getConnection(driver, "postgres", "password")) {
+            if (conn != null) {
+                System.out.println("Conectado ao Banco de Dados com sucesso.");
+            } else {
+                System.out.println("Falha ao conectar ao Banco de Dados.");
+            }
+
+            System.out.println("Criando tabela, aguarde...");
+            st = conn.createStatement();
+            st.executeUpdate(SQLcriarTabela);
+            System.out.println("Tabela criada com sucesso!");
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        } finally {
+            try {
+                if (st != null) {
+                    st.close();
+                }
+            } catch (SQLException e) {
+                System.err.format("Error closing statement: %s\n%s", e.getSQLState(), e.getMessage());
+            }
+        }
+    }
+
+    public static void inserirDados() {
+        String driver = "jdbc:postgresql://127.0.0.1:5432/DadosGerais";
+        Statement st = null;
+
+        try (Connection conn = DriverManager.getConnection(driver, "postgres", "password")) {
+            if (conn != null) {
+                System.out.println("Conectado ao Banco de Dados com sucesso.");
+            } else {
+                System.out.println("Falha ao conectar ao Banco de Dados.");
+            }
+
+            Scanner scanner = new Scanner(System.in);
+
+            System.out.println("Digite o ID:");
+            int id = scanner.nextInt();
+
+            scanner.nextLine();
+
+            System.out.println("Digite o nome do produto:");
+            String nomeProduto = scanner.nextLine();
+
+            System.out.println("Digite o lote:");
+            String lote = scanner.nextLine();
+
+            System.out.println("Digite a data de validade (AAAA-MM-DD):");
+            String validade = scanner.nextLine();
+
+            System.out.println("Digite o código de barras:");
+            int codigoBarras = scanner.nextInt();
+
+            String SQLinserirDados = "INSERT INTO produtosSupermercado (id, nomeProduto, lote, validade, codigoBarras) VALUES (" + id + ", '" + nomeProduto + "', '" + lote + "', '" + validade + "', " + codigoBarras + ")";
+
+            System.out.println("Inserindo dados na tabela...");
+
+            st = conn.createStatement();
+            st.executeUpdate(SQLinserirDados);
+
+            System.out.println("Dados inseridos!");
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        } finally {
+            try {
+                if (st != null) {
+                    st.close();
+                }
+            } catch (SQLException e) {
+                System.err.format("Error closing statement: %s\n%s", e.getSQLState(), e.getMessage());
+            }
+        }
+    }
+
+    public static void consultarDados() {
+        String SQLConsultarDados = "SELECT * FROM produtosSupermercado";
+        String driver = "jdbc:postgresql://127.0.0.1:5432/DadosGerais";
+        Statement st;
+        ResultSet result;
+
+        try (Connection conn = DriverManager.getConnection(driver, "postgres", "password")) {
+            if (conn != null) {
+                System.out.println("Conectado ao Banco de Dados com sucesso.");
+            } else {
+                System.out.println("Falha ao conectar ao Banco de Dados.");
+            }
+
+            System.out.println("Consultando dados na tabela...");
+            st = conn.createStatement();
+            result = st.executeQuery(SQLConsultarDados);
+
+            while (result.next()) {
+                System.out.println("-----------------");
+                System.out.println("ID: " + result.getInt("id"));
+                System.out.println("Nome do Produto: " + result.getString("nomeProduto"));
+                System.out.println("Lote: " + result.getString("lote"));
+                System.out.println("Validade: " + result.getDate("validade"));
+                System.out.println("Código de Barras: " + result.getInt("codigoBarras"));
+            }
+
+            result.close();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void atualizarDados() {
+        String driver = "jdbc:postgresql://127.0.0.1:5432/DadosGerais";
+        Statement st = null;
+
+        try (Connection conn = DriverManager.getConnection(driver, "postgres", "password")) {
+            if (conn != null) {
+                System.out.println("Conectado ao Banco de Dados com sucesso.");
+            } else {
+                System.out.println("Falha ao conectar ao Banco de Dados.");
+            }
+
+            Scanner scanner = new Scanner(System.in);
+
+            System.out.println("Digite o ID do produto para ser modificado:");
+            int id = scanner.nextInt();
+
+            scanner.nextLine();
+
+            System.out.println("Digite o novo nome do produto:");
+            String novoNomeProduto = scanner.nextLine();
+
+            String SQLatualizarDados = "UPDATE produtosSupermercado SET nomeProduto = '" + novoNomeProduto + "' WHERE id = " + id;
+            System.out.println("Atualizando dados na tabela...");
+
+            st = conn.createStatement();
+            st.executeUpdate(SQLatualizarDados);
+
+            System.out.println("Dados atualizados!");
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        } finally {
+            try {
+                if (st != null) {
+                    st.close();
+                }
+            } catch (SQLException e) {
+                System.err.format("Error closing statement: %s\n%s", e.getSQLState(), e.getMessage());
+            }
+        }
+    }
+    public static void deletarTabela() {
+        String tableName = "produtosSupermercado";
+        String driver = "jdbc:postgresql://127.0.0.1:5432/DadosGerais";
+
+        try (Connection conn = DriverManager.getConnection(driver, "postgres", "password")) {
+            if (conn != null) {
+                System.out.println("Conectado ao Banco de Dados com sucesso.");
+            } else {
+                System.out.println("Falha ao conectar ao Banco de Dados.");
+            }
+
+            System.out.println("Deletando Tabela...");
+
+            Statement statement = conn.createStatement();
+            String sql = "DROP TABLE IF EXISTS " + tableName;
+            statement.executeUpdate(sql);
+
+            System.out.println("Tabela Deletada com Sucesso.");
+
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+    public static void apagarDados() {
+        String SQLapagarDados = "DELETE FROM produtosSupermercado";
+        String driver = "jdbc:postgresql://127.0.0.1:5432/DadosGerais";
+        Statement st = null;
+
+        try (Connection conn = DriverManager.getConnection(driver, "postgres", "password")) {
+            if (conn != null) {
+                System.out.println("Conectado ao Banco de Dados com sucesso.");
+            } else {
+                System.out.println("Falha ao conectar ao Banco de Dados.");
+            }
+            System.out.println("Excluindo dados da tabela...");
+            st = conn.createStatement();
+            st.executeUpdate(SQLapagarDados);
+            System.out.println("Dados excluídos!");
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        } finally {
+            try {
+                if (st != null) {
+                    st.close();
+                }
+            } catch (SQLException e) {
+                System.err.format("Error closing statement: %s\n%s", e.getSQLState(), e.getMessage());
+            }
+        }
+    }
